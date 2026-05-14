@@ -3,11 +3,10 @@ import jwt from 'jsonwebtoken';
 import { User } from '../../models/index.js';
 import { SECRET_KEY } from '../../middleware/auth.js';
 
-const isProd = process.env.NODE_ENV === 'production';
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: isProd,
-  sameSite: isProd ? 'none' : 'strict',
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
 
@@ -31,7 +30,7 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie('token', { httpOnly: true, secure: isProd, sameSite: isProd ? 'none' : 'strict' });
+  res.clearCookie('token', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict' });
   res.json({ success: true });
 };
 

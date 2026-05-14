@@ -13,10 +13,6 @@ module.exports = {
     password: process.env.DB_PASSWORD || null,
     database: process.env.DB_NAME,
     host:     process.env.DB_HOST,
-    port:     process.env.DB_PORT || 3306,
-    dialect:  process.env.DB_DIALECT || 'mysql',
-    dialectOptions: {
-      ssl: { rejectUnauthorized: false },
-    },
+    dialect:  process.env.DB_DIALECT,
   },
 };

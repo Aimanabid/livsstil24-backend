@@ -25,7 +25,7 @@ export const getByPlacement = async (req, res) => {
     await AdEvent.create({ ad_id: ad.id, event_type: 'impression' });
   }
 
-  res.json(ads.map(a => ({ ...a.toJSON(), placement_name: placement.name, size: placement.size, width: placement.width, height: placement.height })));
+  res.json(ads.map(a => ({ ...a.toJSON(), placement_name: placement.name })));
 };
 
 export const trackClick = async (req, res) => {
@@ -65,12 +65,10 @@ export const getPlacements = async (req, res) => {
 };
 
 export const createPlacement = async (req, res) => {
-  const { name, key, description, width, height, price_per_month, max_ads } = req.body;
+  const { name, key, description, price_per_month, max_ads } = req.body;
   try {
     const p = await AdPlacement.create({
       name, position_key: key, description: description || '',
-      width: width || null, height: height || null,
-      size: width && height ? `${width}x${height}` : '',
       price_monthly: price_per_month || 0, max_ads: max_ads || 1,
     });
     res.status(201).json({ ...p.toJSON(), key: p.position_key, price_per_month: p.price_monthly });
@@ -80,12 +78,10 @@ export const createPlacement = async (req, res) => {
 };
 
 export const updatePlacement = async (req, res) => {
-  const { name, key, description, width, height, price_per_month, max_ads, is_active } = req.body;
+  const { name, key, description, price_per_month, max_ads, is_active } = req.body;
   try {
     await AdPlacement.update({
       name, position_key: key, description: description || '',
-      width: width || null, height: height || null,
-      size: width && height ? `${width}x${height}` : '',
       price_monthly: price_per_month || 0, max_ads: max_ads || 1,
       is_active: is_active !== undefined ? is_active : true,
     }, { where: { id: req.params.id } });
