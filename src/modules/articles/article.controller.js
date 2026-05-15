@@ -36,12 +36,16 @@ export const getPublished = async (req, res) => {
 export const getBySlug = async (req, res) => {
   const article = await Article.findOne({ where: { slug: req.params.slug, status: 'published' }, include });
   if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
+  res.json(fmt(article));
+};
 
+export const trackView = async (req, res) => {
+  const article = await Article.findOne({ where: { slug: req.params.slug, status: 'published' } });
+  if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
   await article.increment('views');
   const device = req.headers['user-agent']?.includes('Mobile') ? 'mobile' : 'desktop';
   await PageView.create({ article_id: article.id, page: `/artikel/${req.params.slug}`, device });
-
-  res.json({ ...fmt(article), views: article.views + 1 });
+  res.json({ success: true });
 };
 
 export const getAllAdmin = async (req, res) => {

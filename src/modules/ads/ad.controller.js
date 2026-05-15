@@ -20,12 +20,13 @@ export const getByPlacement = async (req, res) => {
     limit: placement.max_ads,
   });
 
-  for (const ad of ads) {
-    await ad.increment('impressions');
-    await AdEvent.create({ ad_id: ad.id, event_type: 'impression' });
-  }
-
   res.json(ads.map(a => ({ ...a.toJSON(), placement_name: placement.name })));
+};
+
+export const trackImpression = async (req, res) => {
+  await Ad.increment('impressions', { where: { id: req.params.id } });
+  await AdEvent.create({ ad_id: req.params.id, event_type: 'impression' });
+  res.json({ success: true });
 };
 
 export const trackClick = async (req, res) => {

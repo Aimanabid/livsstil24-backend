@@ -14,7 +14,8 @@ import adRoutes       from './modules/ads/ad.router.js';
 import statsRoutes    from './modules/stats/stats.router.js';
 import uploadRoutes   from './modules/upload/upload.router.js';
 import customerRoutes from './modules/customers/customer.router.js';
-import categoryRoutes from './modules/categories/category.router.js';
+import categoryRoutes  from './modules/categories/category.router.js';
+import settingsRoutes  from './modules/settings/settings.router.js';
 
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -35,6 +36,7 @@ app.use('/api/stats',      statsRoutes);
 app.use('/api/upload',     uploadRoutes);
 app.use('/api/customers',  customerRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/settings',  settingsRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', time: new Date() }));
 
