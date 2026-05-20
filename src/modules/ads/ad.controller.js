@@ -20,6 +20,7 @@ export const getByPlacement = async (req, res) => {
     limit: placement.max_ads,
   });
 
+  res.set('Cache-Control', 'no-store');
   res.json(ads.map(a => ({ ...a.toJSON(), placement_name: placement.name })));
 };
 

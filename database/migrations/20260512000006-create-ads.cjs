@@ -11,6 +11,8 @@ module.exports = {
         image_url:    { type: Sequelize.STRING },
         link_url:     { type: Sequelize.STRING },
         alt_text:     { type: Sequelize.STRING },
+        ad_type:      { type: Sequelize.STRING,     defaultValue: 'image' },
+        video_url:    { type: Sequelize.STRING },
         placement_id: { type: Sequelize.STRING(16), references: { model: 'ad_placements', key: 'id' }, onUpdate: 'CASCADE', onDelete: 'SET NULL' },
         customer_id:  { type: Sequelize.STRING(16), references: { model: 'customers',     key: 'id' }, onUpdate: 'CASCADE', onDelete: 'SET NULL' },
         status:       { type: Sequelize.STRING,     defaultValue: 'active' },

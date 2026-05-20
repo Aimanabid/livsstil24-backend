@@ -42,6 +42,7 @@ export const getBySlug = async (req, res) => {
 };
 
 export const trackView = async (req, res) => {
+  if (req.user) return res.json({ success: true, counted: false });
   try {
     const article = await Article.findOne({ where: { slug: req.params.slug, status: 'published' } });
     if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
