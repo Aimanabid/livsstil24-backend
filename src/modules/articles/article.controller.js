@@ -1,5 +1,6 @@
 import { Op } from 'sequelize';
 import slugify from 'slugify';
+import sequelize from '../../config/db.js';
 import { Article, Category, User, PageView } from '../../models/index.js';
 
 const include = [
@@ -16,10 +17,11 @@ const fmt = (a) => ({
 });
 
 export const getPublished = async (req, res) => {
-  const { category, featured, limit = 20, offset = 0, search } = req.query;
+  const { category, featured, limit = 20, offset = 0, search, tag } = req.query;
   const where = { status: 'published' };
   if (featured === 'true') where.featured = true;
   if (search) where.title = { [Op.like]: `%${search}%` };
+  if (tag) where[Op.and] = sequelize.literal(`JSON_CONTAINS(articles.tags, ${sequelize.escape(JSON.stringify(tag))})`);
 
   const categoryWhere = category ? { slug: category } : undefined;
 
@@ -40,12 +42,20 @@ export const getBySlug = async (req, res) => {
 };
 
 export const trackView = async (req, res) => {
-  const article = await Article.findOne({ where: { slug: req.params.slug, status: 'published' } });
-  if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
-  await article.increment('views');
-  const device = req.headers['user-agent']?.includes('Mobile') ? 'mobile' : 'desktop';
-  await PageView.create({ article_id: article.id, page: `/artikel/${req.params.slug}`, device });
-  res.json({ success: true });
+  try {
+    const article = await Article.findOne({ where: { slug: req.params.slug, status: 'published' } });
+    if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
+
+    const device = req.headers['user-agent']?.includes('Mobile') ? 'mobile' : 'desktop';
+    const visitor_id = req.body?.visitor_id || null;
+
+    await article.increment('views');
+    await PageView.create({ article_id: article.id, page: `/artikel/${req.params.slug}`, device, visitor_id });
+    res.json({ success: true, counted: true });
+  } catch (err) {
+    console.error('trackView error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 export const getAllAdmin = async (req, res) => {

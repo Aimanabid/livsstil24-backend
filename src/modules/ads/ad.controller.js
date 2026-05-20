@@ -24,12 +24,14 @@ export const getByPlacement = async (req, res) => {
 };
 
 export const trackImpression = async (req, res) => {
+  if (req.user) return res.json({ success: true });
   await Ad.increment('impressions', { where: { id: req.params.id } });
   await AdEvent.create({ ad_id: req.params.id, event_type: 'impression' });
   res.json({ success: true });
 };
 
 export const trackClick = async (req, res) => {
+  if (req.user) return res.json({ success: true });
   await Ad.increment('clicks', { where: { id: req.params.id } });
   await AdEvent.create({ ad_id: req.params.id, event_type: 'click' });
   res.json({ success: true });

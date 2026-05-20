@@ -8,6 +8,7 @@ const PageView = sequelize.define('PageView', {
   referrer: { type: DataTypes.STRING },
   country: { type: DataTypes.STRING },
   device: { type: DataTypes.STRING },
+  visitor_id: { type: DataTypes.STRING(36) },
 }, {
   tableName: 'page_views',
   underscored: true,
