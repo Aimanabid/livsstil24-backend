@@ -27,7 +27,7 @@ app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173', cred
 app.use(cookieParser());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use('/uploads', express.static(path.join(__dirname, '../../uploads')));
+app.use('/uploads', express.static(process.env.UPLOADS_DIR || path.join(__dirname, '../../uploads')));
 
 app.use('/api/auth',       authRoutes);
 app.use('/api/articles',   articleRoutes);
