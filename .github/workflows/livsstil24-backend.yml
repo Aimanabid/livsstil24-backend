@@ -26,14 +26,12 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
             cd /var/www/html/mg-backend
-
-            git fetch origin
-            git reset --hard origin/main
             git pull origin main
 
             npm install
 
             npm run db:migrate
+            npm run db:seed
 
             nginx -t && systemctl reload nginx
 
