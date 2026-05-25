@@ -5,6 +5,8 @@ const DEFAULTS = {
   instagram_url:    '',
   facebook_url:     '',
   tiktok_url:       '',
+  youtube_url:      '',
+  linkedin_url:     '',
   logo_url:         '',
   favicon_url:      '',
 };

@@ -22,7 +22,8 @@ const categoryData = [
   { name: 'Mat',       slug: 'mat',       color: '#E07A5F', icon: '🍽️', sort_order: 3 },
   { name: 'Resor',     slug: 'resor',     color: '#3D405B', icon: '✈️', sort_order: 4 },
   { name: 'Hem',       slug: 'hem',       color: '#81B29A', icon: '🏡', sort_order: 5 },
-  { name: 'Skönhet',   slug: 'skonhet',   color: '#F2CC8F', icon: '💄', sort_order: 6 },
+  { name: 'Skönhet',      slug: 'skonhet',      color: '#F2CC8F', icon: '💄', sort_order: 6 },
+  { name: 'Livsstil24 TV', slug: 'livsstil24-tv', color: '#E63946', icon: '📺', sort_order: 7 },
 ];
 
 const categories = {};

@@ -41,6 +41,18 @@ export const getBySlug = async (req, res) => {
   res.json(fmt(article));
 };
 
+export const trackSiteVisit = async (req, res) => {
+  try {
+    const visitor_id = req.body?.visitor_id || null;
+    if (!visitor_id) return res.json({ success: false });
+    const device = req.headers['user-agent']?.includes('Mobile') ? 'mobile' : 'desktop';
+    await PageView.create({ article_id: null, page: '/', device, visitor_id });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 export const trackView = async (req, res) => {
   if (req.user) return res.json({ success: true, counted: false });
   try {
@@ -84,7 +96,7 @@ export const getByIdAdmin = async (req, res) => {
 };
 
 export const create = async (req, res) => {
-  const { title, excerpt, content, featured_image, category_id, status, featured, read_time, tags, seo_title, seo_description } = req.body;
+  const { title, excerpt, content, featured_image, video_url, category_id, status, featured, read_time, tags, seo_title, seo_description } = req.body;
   if (!title) return res.status(400).json({ error: 'Titel krävs' });
   if (!category_id) return res.status(400).json({ error: 'Kategori krävs' });
 
@@ -92,7 +104,7 @@ export const create = async (req, res) => {
   if (await Article.findOne({ where: { slug } })) slug = `${slug}-${Date.now()}`;
 
   const article = await Article.create({
-    title, slug, excerpt, content, featured_image, category_id,
+    title, slug, excerpt, content, featured_image, video_url: video_url || null, category_id,
     author_id: req.user.id, status: status || 'draft',
     featured: !!featured, read_time: read_time || 5,
     tags: tags || [], seo_title, seo_description,
@@ -104,14 +116,14 @@ export const create = async (req, res) => {
 };
 
 export const update = async (req, res) => {
-  const { title, excerpt, content, featured_image, category_id, status, featured, read_time, tags, seo_title, seo_description } = req.body;
+  const { title, excerpt, content, featured_image, video_url, category_id, status, featured, read_time, tags, seo_title, seo_description } = req.body;
 
   const article = await Article.findByPk(req.params.id);
   if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
 
   const published_at = status === 'published' && !article.published_at ? new Date() : article.published_at;
 
-  await article.update({ title, excerpt, content, featured_image, category_id, status, featured: !!featured, read_time, tags: tags || [], seo_title, seo_description, published_at });
+  await article.update({ title, excerpt, content, featured_image, video_url: video_url || null, category_id, status, featured: !!featured, read_time, tags: tags || [], seo_title, seo_description, published_at });
 
   const full = await Article.findByPk(article.id, { include });
   res.json(fmt(full));

@@ -1,11 +1,12 @@
 import express from 'express';
-import { getPublished, getBySlug, trackView, getAllAdmin, getByIdAdmin, create, update, remove } from './article.controller.js';
+import { getPublished, getBySlug, trackView, trackSiteVisit, getAllAdmin, getByIdAdmin, create, update, remove } from './article.controller.js';
 import { authMiddleware, optionalAuth } from '../../middleware/auth.js';
 
 const router = express.Router();
 
 // Public
 router.get('/', getPublished);
+router.post('/visit', trackSiteVisit);
 router.get('/:slug', getBySlug);
 router.post('/:slug/view', optionalAuth, trackView);
 
