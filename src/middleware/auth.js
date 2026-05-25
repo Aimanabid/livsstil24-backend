@@ -26,4 +26,14 @@ export function adminOnly(req, res, next) {
   next();
 }
 
+export function editorOrAdmin(req, res, next) {
+  if (!['admin', 'editor'].includes(req.user?.role)) return res.status(403).json({ error: 'Kräver redaktörs-behörighet' });
+  next();
+}
+
+export function adManagerOrAdmin(req, res, next) {
+  if (!['admin', 'ad_manager'].includes(req.user?.role)) return res.status(403).json({ error: 'Kräver annonsörs-behörighet' });
+  next();
+}
+
 export const SECRET_KEY = SECRET;

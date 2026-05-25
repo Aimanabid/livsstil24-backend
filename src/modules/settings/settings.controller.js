@@ -1,14 +1,16 @@
 import SiteSetting from './siteSettings.model.js';
 
 const DEFAULTS = {
-  site_description: 'Din digitala livsstilstidning för mode, skönhet och det moderna livet.',
-  instagram_url:    '',
-  facebook_url:     '',
-  tiktok_url:       '',
-  youtube_url:      '',
-  linkedin_url:     '',
-  logo_url:         '',
-  favicon_url:      '',
+  site_description:      'Din digitala livsstilstidning för mode, skönhet och det moderna livet.',
+  instagram_url:         '',
+  facebook_url:          '',
+  tiktok_url:            '',
+  youtube_url:           '',
+  linkedin_url:          '',
+  logo_url:              '',
+  favicon_url:           '',
+  chief_editor:          '',
+  responsible_publisher: '',
 };
 
 export const getAll = async (req, res) => {

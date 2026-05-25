@@ -1,6 +1,6 @@
 import express from 'express';
 import { getPublished, getBySlug, trackView, trackSiteVisit, getAllAdmin, getByIdAdmin, create, update, remove } from './article.controller.js';
-import { authMiddleware, optionalAuth } from '../../middleware/auth.js';
+import { authMiddleware, optionalAuth, editorOrAdmin } from '../../middleware/auth.js';
 
 const router = express.Router();
 
@@ -11,10 +11,10 @@ router.get('/:slug', getBySlug);
 router.post('/:slug/view', optionalAuth, trackView);
 
 // Admin
-router.get('/admin/all', authMiddleware, getAllAdmin);
-router.get('/admin/:id', authMiddleware, getByIdAdmin);
-router.post('/', authMiddleware, create);
-router.put('/:id', authMiddleware, update);
-router.delete('/:id', authMiddleware, remove);
+router.get('/admin/all', authMiddleware, editorOrAdmin, getAllAdmin);
+router.get('/admin/:id', authMiddleware, editorOrAdmin, getByIdAdmin);
+router.post('/', authMiddleware, editorOrAdmin, create);
+router.put('/:id', authMiddleware, editorOrAdmin, update);
+router.delete('/:id', authMiddleware, editorOrAdmin, remove);
 
 export default router;

@@ -11,6 +11,12 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     dialect: "mysql",
     logging: false,
+    pool: {
+      max: 20,
+      min: 2,
+      acquire: 30000,
+      idle: 10000,
+    },
     define: {
       underscored: true,
       timestamps: true,
