@@ -17,7 +17,9 @@ const Ad = sequelize.define('Ad', {
   end_date: { type: DataTypes.DATEONLY },
   clicks: { type: DataTypes.INTEGER, defaultValue: 0 },
   impressions: { type: DataTypes.INTEGER, defaultValue: 0 },
-  price_paid: { type: DataTypes.INTEGER, defaultValue: 0 },
+  max_impressions: { type: DataTypes.INTEGER, allowNull: true, defaultValue: null },
+  freq_cap: { type: DataTypes.INTEGER, allowNull: true, defaultValue: null },
+  freq_cap_window: { type: DataTypes.STRING(20), defaultValue: '24h' },
 }, {
   tableName: 'ads',
   underscored: true,

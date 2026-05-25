@@ -3,8 +3,11 @@ import { Customer, Ad, AdPlacement } from '../../models/index.js';
 
 export const getAll = async (req, res) => {
   const [customers] = await sequelize.query(`
-    SELECT c.*, COUNT(a.id) AS ad_count, COALESCE(SUM(a.price_paid), 0) AS total_revenue
-    FROM customers c LEFT JOIN ads a ON c.id = a.customer_id
+    SELECT c.*, COUNT(a.id) AS ad_count,
+           ROUND(COALESCE(SUM(a.impressions * ap.cpm_rate / 1000.0), 0), 2) AS total_revenue
+    FROM customers c
+    LEFT JOIN ads a ON c.id = a.customer_id
+    LEFT JOIN ad_placements ap ON a.placement_id = ap.id
     GROUP BY c.id ORDER BY c.created_at DESC
   `);
   res.json(customers);

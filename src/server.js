@@ -16,6 +16,7 @@ import uploadRoutes   from './modules/upload/upload.router.js';
 import customerRoutes from './modules/customers/customer.router.js';
 import categoryRoutes  from './modules/categories/category.router.js';
 import settingsRoutes  from './modules/settings/settings.router.js';
+import usersRoutes     from './modules/users/users.router.js';
 
 dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,6 +38,7 @@ app.use('/api/upload',     uploadRoutes);
 app.use('/api/customers',  customerRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/settings',  settingsRoutes);
+app.use('/api/users',     usersRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', time: new Date() }));
 

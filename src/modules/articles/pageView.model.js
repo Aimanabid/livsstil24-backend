@@ -9,6 +9,8 @@ const PageView = sequelize.define('PageView', {
   country: { type: DataTypes.STRING },
   device: { type: DataTypes.STRING },
   visitor_id: { type: DataTypes.STRING(36) },
+  session_id: { type: DataTypes.STRING(36), allowNull: true },
+  ip_address: { type: DataTypes.STRING(45), allowNull: true },
 }, {
   tableName: 'page_views',
   underscored: true,

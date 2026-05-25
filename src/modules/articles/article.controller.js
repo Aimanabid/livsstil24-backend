@@ -17,18 +17,19 @@ const fmt = (a) => ({
 });
 
 export const getPublished = async (req, res) => {
-  const { category, featured, limit = 20, offset = 0, search, tag } = req.query;
+  const { category, featured, limit = 20, offset = 0, search, tag, sort } = req.query;
   const where = { status: 'published' };
   if (featured === 'true') where.featured = true;
   if (search) where.title = { [Op.like]: `%${search}%` };
   if (tag) where[Op.and] = sequelize.literal(`JSON_CONTAINS(articles.tags, ${sequelize.escape(JSON.stringify(tag))})`);
 
   const categoryWhere = category ? { slug: category } : undefined;
+  const order = sort === 'views' ? [['views', 'DESC']] : [['published_at', 'DESC']];
 
   const { rows, count } = await Article.findAndCountAll({
     where,
     include: include.map(i => ({ ...i, where: i.model === Category && categoryWhere ? categoryWhere : undefined })),
-    order: [['published_at', 'DESC']],
+    order,
     limit: parseInt(limit),
     offset: parseInt(offset),
   });
@@ -43,10 +44,11 @@ export const getBySlug = async (req, res) => {
 
 export const trackSiteVisit = async (req, res) => {
   try {
-    const visitor_id = req.body?.visitor_id || null;
+    const { visitor_id, session_id } = req.body;
     if (!visitor_id) return res.json({ success: false });
     const device = req.headers['user-agent']?.includes('Mobile') ? 'mobile' : 'desktop';
-    await PageView.create({ article_id: null, page: '/', device, visitor_id });
+    const ip_address = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
+    await PageView.create({ article_id: null, page: '/', device, visitor_id, session_id: session_id || null, ip_address });
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -60,10 +62,11 @@ export const trackView = async (req, res) => {
     if (!article) return res.status(404).json({ error: 'Artikel hittades inte' });
 
     const device = req.headers['user-agent']?.includes('Mobile') ? 'mobile' : 'desktop';
-    const visitor_id = req.body?.visitor_id || null;
+    const { visitor_id, session_id } = req.body;
+    const ip_address = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip;
 
     await article.increment('views');
-    await PageView.create({ article_id: article.id, page: `/artikel/${req.params.slug}`, device, visitor_id });
+    await PageView.create({ article_id: article.id, page: `/artikel/${req.params.slug}`, device, visitor_id: visitor_id || null, session_id: session_id || null, ip_address });
     res.json({ success: true, counted: true });
   } catch (err) {
     console.error('trackView error:', err.message);
