@@ -18,7 +18,7 @@ export const getDashboard = async (req, res) => {
         (SELECT COUNT(*) FROM customers)                         AS totalCustomers,
         (SELECT COALESCE(SUM(price_paid),0) FROM ads)            AS adRevenue,
         (SELECT COUNT(*) FROM page_views WHERE article_id IS NOT NULL AND created_at BETWEEN ${fromEsc} AND ${toEsc}) AS totalViews,
-        (SELECT COUNT(DISTINCT visitor_id) FROM page_views WHERE article_id IS NOT NULL AND visitor_id IS NOT NULL AND created_at BETWEEN ${fromEsc} AND ${toEsc}) AS uniqueVisitors
+        (SELECT COUNT(DISTINCT visitor_id) FROM page_views WHERE visitor_id IS NOT NULL AND created_at BETWEEN ${fromEsc} AND ${toEsc}) AS uniqueVisitors
     `);
 
     const [topArticles] = await sequelize.query(`

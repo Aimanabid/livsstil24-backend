@@ -9,6 +9,7 @@ const Article = sequelize.define('Article', {
   excerpt: { type: DataTypes.TEXT },
   content: { type: DataTypes.TEXT('long') },
   featured_image: { type: DataTypes.STRING },
+  video_url: { type: DataTypes.STRING },
   category_id: { type: DataTypes.STRING(16) },
   author_id: { type: DataTypes.STRING(16) },
   status: { type: DataTypes.STRING, defaultValue: 'draft' },
